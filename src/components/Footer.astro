@@ -1,0 +1,17 @@
+---
+import { person } from "../data/site";
+---
+
+<footer class="container py-16">
+  <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
+    <div class="space-y-3">
+      <p class="m-0 font-mono text-xs text-muted">© 2026 {person.name}</p>
+    </div>
+    <div class="flex gap-6 font-mono text-xs text-muted">
+        <a class="animated-link transition-colors hover:text-ink" href={person.github}>github</a>
+        <a class="animated-link transition-colors hover:text-ink" href={person.x}>x</a>
+        <a class="animated-link transition-colors hover:text-ink" href={person.linkedin}>linkedin</a>
+        <a class="animated-link transition-colors hover:text-ink" href="/contact/">contact</a>
+    </div>
+  </div>
+</footer>

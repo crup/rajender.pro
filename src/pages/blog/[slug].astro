@@ -1,0 +1,86 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ogImageSet, person } from "../../data/site";
+
+type MarkdownPost = {
+  frontmatter: {
+    title: string;
+    slug: string;
+    date: string;
+    category: string;
+    excerpt: string;
+    readingTime?: string;
+    updated?: string;
+    keywords?: string;
+  };
+  Content: any;
+};
+
+export async function getStaticPaths() {
+  const posts = Object.values(
+    import.meta.glob("../../content/blog/*.md", { eager: true }),
+  ) as MarkdownPost[];
+  return posts.map((post) => ({
+    params: { slug: post.frontmatter.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as { post: MarkdownPost };
+const { Content } = post;
+const canonicalPath = `/blog/${post.frontmatter.slug}/`;
+const canonicalUrl = `https://rajender.pro${canonicalPath}`;
+const images = ogImageSet("blog", post.frontmatter.slug);
+const formattedDate = new Intl.DateTimeFormat("en", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+}).format(new Date(`${post.frontmatter.date}T00:00:00`));
+const modifiedDate = post.frontmatter.updated ?? post.frontmatter.date;
+const keywords = post.frontmatter.keywords?.split(",").map((item) => item.trim()).filter(Boolean);
+const articleSchema = {
+  "@type": "Article",
+  "@id": `${canonicalUrl}#article`,
+  headline: post.frontmatter.title,
+  description: post.frontmatter.excerpt,
+  url: canonicalUrl,
+  image: [`https://rajender.pro${images.image}`, `https://rajender.pro${images.squareImage}`],
+  datePublished: post.frontmatter.date,
+  dateModified: modifiedDate,
+  author: { "@id": "https://rajender.pro/#person" },
+  publisher: { "@id": "https://rajender.pro/#person" },
+  mainEntityOfPage: { "@id": `${canonicalUrl}#webpage` },
+  articleSection: post.frontmatter.category,
+};
+---
+
+<BaseLayout
+  title={post.frontmatter.title}
+  description={post.frontmatter.excerpt}
+  canonicalPath={canonicalPath}
+  pageType="article"
+  publishedTime={post.frontmatter.date}
+  modifiedTime={modifiedDate}
+  keywords={keywords}
+  imageAlt={`${post.frontmatter.title} by ${person.name}`}
+  schema={[articleSchema]}
+  {...images}
+>
+  <article class="container section pt-8">
+    <header class="max-w-3xl">
+      <a class="animated-link transition-colors font-mono text-sm text-muted hover:text-ink" href="/blog/">← blog</a>
+      <div class="meta-row mt-8">
+        <time datetime={post.frontmatter.date}>{formattedDate}</time>
+        <span>/</span>
+        <a class="animated-link transition-colors hover:text-ink" href="/blog/">{post.frontmatter.category}</a>
+        {post.frontmatter.readingTime && <span>/</span>}
+        {post.frontmatter.readingTime && <span>{post.frontmatter.readingTime}</span>}
+      </div>
+      <h1 class="mt-5 text-3xl font-500 leading-tight">{post.frontmatter.title}</h1>
+      <p class="mt-5 text-base leading-7 text-muted">{post.frontmatter.excerpt}</p>
+    </header>
+    <div class="prose mt-10">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

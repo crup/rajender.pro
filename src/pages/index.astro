@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { ogImageSet, opensourceProjects, repoPosts } from "../data/site";
+
+const homePosts = repoPosts.slice(0, 5);
+---
+
+<BaseLayout
+  title="Rajender Joshi"
+  description="Rajender Joshi is an AI-native founder-engineer building practical AI systems, durable software, and sharper workflows."
+  pageType="profile"
+  {...ogImageSet("static", "home")}
+>
+  <section class="container pt-8 sm:pt-10">
+    <p class="m-0 max-w-xl text-base leading-7 text-ink">
+      I build practical AI systems and durable software for half-broken workflows. Most of my work lives near the messy middle: product pressure, platform decisions, team judgment, and the operating details that decide whether software holds up.
+    </p>
+    <a class="animated-link transition-colors mt-5 text-xs text-muted hover:text-ink" href="/about/">Read more</a>
+  </section>
+
+  <section class="container section">
+    <div class="grid gap-6 sm:grid-cols-[7.5rem_1fr]">
+      <p class="m-0 font-mono text-xs text-muted">opensource</p>
+      <div class="space-y-6">
+        {opensourceProjects.map((item) => (
+          <article>
+            <a class="transition-colors text-base no-underline hover:text-ink" href={`/opensource/${item.slug}/`}>
+              <span class="animated-text">{item.name}</span>
+            </a>
+            <p class="m-0 mt-1 text-sm leading-6 text-muted">{item.summary}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="grid gap-6 sm:grid-cols-[7.5rem_1fr]">
+      <p class="m-0 font-mono text-xs text-muted">blog</p>
+      <div class="space-y-5">
+        {homePosts.map((article) => (
+          <article class="grid gap-1 sm:grid-cols-[1fr_7.5rem] sm:items-baseline">
+            <a class="transition-colors text-base no-underline hover:text-ink" href={article.href}>
+              <span class="animated-text">{article.title}</span>
+            </a>
+            <time class="font-mono text-xs leading-6 text-muted sm:text-right" datetime={article.date}>
+              {article.date.slice(0, 7)}
+            </time>
+          </article>
+        ))}
+        <a class="animated-link transition-colors text-xs text-muted hover:text-ink" href="/blog/">View all</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

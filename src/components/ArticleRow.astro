@@ -1,0 +1,30 @@
+---
+interface Props {
+  article: {
+    title: string;
+    href: string;
+    date: string;
+    category: string;
+    excerpt?: string;
+    readingTime?: string;
+  };
+}
+
+const { article } = Astro.props;
+const formattedDate = new Intl.DateTimeFormat("en", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+}).format(new Date(`${article.date}T00:00:00`));
+---
+
+<article class="border-t border-line py-4">
+  <div class="grid gap-1 sm:grid-cols-[1fr_7.5rem] sm:items-baseline">
+    <a class="transition-colors text-base font-500 no-underline hover:text-ink" href={article.href}>
+      <span class="animated-text">{article.title}</span>
+    </a>
+    <time class="font-mono text-xs leading-6 text-muted sm:text-right" datetime={article.date}>{formattedDate}</time>
+    {article.excerpt && <p class="m-0 text-sm leading-7 text-muted sm:col-start-1">{article.excerpt}</p>}
+    {article.readingTime && <p class="m-0 font-mono text-xs leading-6 text-muted sm:col-start-2 sm:text-right">{article.readingTime}</p>}
+  </div>
+</article>

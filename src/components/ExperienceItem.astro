@@ -1,0 +1,21 @@
+---
+interface Props {
+  item: {
+    company: string;
+    role: string;
+    dates: string;
+    description: string;
+  };
+}
+
+const { item } = Astro.props;
+---
+
+<article class="grid gap-3 border-t border-line py-5 sm:grid-cols-[12rem_1fr]">
+  <div class="text-sm text-muted">{item.dates}</div>
+  <div>
+    <h3 class="m-0 text-lg font-600">{item.company}</h3>
+    <p class="m-0 text-sm text-accent">{item.role}</p>
+    <p class="mb-0 mt-3 text-sm leading-7 text-muted">{item.description}</p>
+  </div>
+</article>

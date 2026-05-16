@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleRow from "../../components/ArticleRow.astro";
+import { ogImageSet } from "../../data/site";
+
+type MarkdownPost = {
+  frontmatter: {
+    title: string;
+    slug: string;
+    date: string;
+    category: string;
+    excerpt: string;
+    readingTime?: string;
+  };
+};
+
+const posts = Object.values(
+  import.meta.glob("../../content/blog/*.md", { eager: true }),
+) as MarkdownPost[];
+const articles = posts
+  .map((post) => ({
+    title: post.frontmatter.title,
+    href: `/blog/${post.frontmatter.slug}/`,
+    date: post.frontmatter.date,
+    category: post.frontmatter.category,
+    excerpt: post.frontmatter.excerpt,
+    readingTime: post.frontmatter.readingTime,
+  }))
+  .sort((a, b) => b.date.localeCompare(a.date));
+---
+
+<BaseLayout
+  title="Blog"
+  description="Deep technical essays by Rajender Joshi about opensource projects, iframe protocol design, React timer lifecycles, and local-first AI-agent telemetry."
+  pageType="collection"
+  {...ogImageSet("static", "blog")}
+>
+  <section class="container section pt-8">
+    <p class="eyebrow">Blog</p>
+    <h1 class="page-title mt-4">Notes on things I built.</h1>
+    <p class="mt-5 max-w-2xl text-lg leading-8 text-muted">
+      Notes on software, product engineering, open source, and the tradeoffs that show up while building.
+    </p>
+  </section>
+
+  <section class="container pb-16">
+    {articles.map((article) => <ArticleRow article={article} />)}
+  </section>
+</BaseLayout>

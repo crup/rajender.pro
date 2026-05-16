@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { experience, ogImageSet, skills } from "../data/site";
+---
+
+<BaseLayout
+  title="About"
+  description="About Rajender Joshi, an AI-native founder-engineer working across practical AI systems, product engineering, platform architecture, and engineering leadership."
+  pageType="profile"
+  {...ogImageSet("static", "about")}
+>
+  <section class="container pt-14 sm:pt-18">
+    <div>
+      <p class="font-mono text-sm text-muted">about</p>
+      <h1 class="mt-5 text-2xl font-500 leading-tight">AI-native founder-engineer, still close to the system.</h1>
+      <div class="mt-8 space-y-5 text-base leading-7 text-muted">
+        <p>
+          I build practical AI systems, durable software, and sharper workflows. My path runs through hands-on product engineering, engineering leadership, frontend platforms, service integration, cloud delivery, observability, and the operating rhythms that help teams keep quality visible while they move.
+        </p>
+        <p>
+          The useful part of my work is not a title. It is the ability to turn vague pressure into a clearer system: ownership, architecture, feedback loops, release habits, and enough taste to know when automation helps and when it is only hiding the mess.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="grid gap-6 sm:grid-cols-[8rem_1fr]">
+      <p class="m-0 font-mono text-sm text-muted">skills</p>
+      <div class="space-y-5">
+        {skills.map((skill) => (
+          <article>
+            <h2 class="m-0 text-base font-500">{skill.name}</h2>
+            <p class="mb-0 mt-1 text-sm leading-6 text-muted">{skill.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="grid gap-6 sm:grid-cols-[8rem_1fr]">
+      <p class="m-0 font-mono text-sm text-muted">experience</p>
+      <div class="space-y-5">
+        {experience.map((item) => (
+          <article class="grid gap-1 sm:grid-cols-[1fr_10rem] sm:items-baseline">
+            <h2 class="m-0 text-base font-500">
+              <span>{item.role}</span>
+              <span class="meta-separator text-muted">{item.company}</span>
+            </h2>
+            <p class="m-0 font-mono text-xs leading-6 text-muted sm:text-right">{item.dates}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="grid gap-6 sm:grid-cols-[8rem_1fr]">
+      <p class="m-0 font-mono text-sm text-muted">notes</p>
+      <div class="space-y-5">
+        <blockquote class="m-0 border-l border-line pl-5 text-base leading-7 text-muted">
+          I care about the small operating details: ownership, review habits, release paths, and whether people can see the system clearly enough to improve it.
+        </blockquote>
+        <blockquote class="m-0 border-l border-line pl-5 text-base leading-7 text-muted">
+          I like staying close to the code even when the work is leadership, because technical judgment gets weaker when it only happens through updates and diagrams.
+        </blockquote>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

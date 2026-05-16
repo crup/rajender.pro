@@ -1,0 +1,177 @@
+---
+import "virtual:uno.css";
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { person } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  image?: string;
+  twitterImage?: string;
+  squareImage?: string;
+  imageAlt?: string;
+  pageType?: "website" | "article" | "profile" | "collection" | "software";
+  publishedTime?: string;
+  modifiedTime?: string;
+  keywords?: string[];
+  schema?: Record<string, unknown>[];
+}
+
+const {
+  title = "Rajender Joshi",
+  description = "Personal site for Rajender Joshi, an AI-native founder-engineer building practical AI systems, durable software, and sharper workflows.",
+  canonicalPath = Astro.url.pathname,
+  image = "/rajender-joshi-portrait.jpg",
+  twitterImage,
+  squareImage,
+  imageAlt = "Rajender Joshi portrait",
+  pageType = "website",
+  publishedTime,
+  modifiedTime,
+  keywords = [
+    "Rajender Joshi",
+    "AI systems",
+    "engineering leadership",
+    "software engineering",
+    "opensource",
+    "TypeScript",
+    "React",
+    "product systems",
+  ],
+  schema = [],
+} = Astro.props;
+
+const pageTitle = title === "Rajender Joshi" ? title : `${title} | Rajender Joshi`;
+const siteUrl = Astro.site ?? new URL("https://rajender.pro");
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
+const imageUrl = new URL(image, siteUrl).toString();
+const twitterImageUrl = new URL(twitterImage ?? image, siteUrl).toString();
+const squareImageUrl = new URL(squareImage ?? image, siteUrl).toString();
+const ogType = pageType === "article" ? "article" : pageType === "profile" ? "profile" : "website";
+const schemaPageType = pageType === "profile" ? "ProfilePage" : pageType === "collection" ? "CollectionPage" : "WebPage";
+const robots = "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
+const schemaGraph = [
+  {
+    "@type": "Person",
+    "@id": "https://rajender.pro/#person",
+    name: person.name,
+    url: "https://rajender.pro",
+    email: person.email,
+    image: imageUrl,
+    jobTitle: person.role,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: person.location,
+      addressCountry: "IN",
+    },
+    sameAs: [person.github, person.linkedin, person.x],
+    knowsAbout: [
+      "AI systems",
+      "software engineering",
+      "engineering leadership",
+      "frontend architecture",
+      "product systems",
+      "opensource software",
+    ],
+  },
+  {
+    "@type": "WebSite",
+    "@id": "https://rajender.pro/#website",
+    name: "Rajender Joshi",
+    url: "https://rajender.pro",
+    inLanguage: "en",
+    publisher: { "@id": "https://rajender.pro/#person" },
+  },
+  {
+    "@type": schemaPageType,
+    "@id": `${canonicalUrl}#webpage`,
+    url: canonicalUrl,
+    name: pageTitle,
+    description,
+    inLanguage: "en",
+    isPartOf: { "@id": "https://rajender.pro/#website" },
+    about: { "@id": "https://rajender.pro/#person" },
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      url: imageUrl,
+      caption: imageAlt,
+    },
+    image: [imageUrl, twitterImageUrl, squareImageUrl],
+    datePublished: publishedTime,
+    dateModified: modifiedTime ?? publishedTime,
+  },
+  ...schema,
+].filter(Boolean);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="author" content={person.name} />
+    <meta name="creator" content={person.name} />
+    <meta name="publisher" content={person.name} />
+    <meta name="keywords" content={keywords.join(", ")} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7f7f5" />
+    <meta name="application-name" content="Rajender Joshi" />
+    <meta property="og:site_name" content="Rajender Joshi" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:secure_url" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:image" content={squareImageUrl} />
+    <meta property="og:image:secure_url" content={squareImageUrl} />
+    <meta property="og:image:width" content="1080" />
+    <meta property="og:image:height" content="1080" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:locale" content="en_IN" />
+    {pageType === "article" && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {pageType === "article" && (modifiedTime ?? publishedTime) && <meta property="article:modified_time" content={modifiedTime ?? publishedTime} />}
+    {pageType === "article" && <meta property="article:author" content={person.name} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@_rajenderjoshi" />
+    <meta name="twitter:creator" content="@_rajenderjoshi" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={twitterImageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="image_src" href={imageUrl} />
+    <link rel="alternate" type="text/markdown" title="llms.txt" href="/llms.txt" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <title>{pageTitle}</title>
+    <ClientRouter />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": schemaGraph,
+    })} />
+  </head>
+  <body class="bg-paper text-ink">
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

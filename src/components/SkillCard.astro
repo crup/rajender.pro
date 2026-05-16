@@ -1,0 +1,15 @@
+---
+interface Props {
+  skill: {
+    name: string;
+    description: string;
+  };
+}
+
+const { skill } = Astro.props;
+---
+
+<article class="border-t border-line py-4">
+  <h3 class="m-0 text-base font-600">{skill.name}</h3>
+  <p class="mb-0 mt-2 text-sm leading-7 text-muted">{skill.description}</p>
+</article>
