@@ -5,6 +5,7 @@
   --default-transition-timing-function: ease;
   background: #f7f7f5;
   text-rendering: optimizeLegibility;
+  scrollbar-gutter: stable both-edges;
 }
 
 * {
